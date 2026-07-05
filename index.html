@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O Universo da Ayla</title>
+    <style>
+        /* Reset e Configurações Gerais */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #010104;
+            color: #ffffff;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        /* Fundo Espacial (Estrelas Fixas e Cadentes) */
+        .space-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: radial-gradient(circle at center, #050414 0%, #010104 100%);
+            overflow: hidden;
+        }
+
+        /* Estrelas piscantes de fundo */
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: twinkle 3s infinite ease-in-out;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        /* Estrelas Cadentes */
+        .shooting-star {
+            position: absolute;
+            left: var(--start-x);
+            top: var(--start-y);
+            height: 2px;
+            background: linear-gradient(-45deg, #ffffff, rgba(0, 0, 0, 0));
+            border-radius: 999px;
+            filter: drop-shadow(0 0 6px #ffffff);
+            animation: shooting var(--duration) linear infinite;
+            transform: rotate(-45deg);
+            opacity: 0;
+        }
+
+        @keyframes shooting {
+            0% {
+                width: 0px;
+                transform: translate(0, 0) rotate(-45deg);
+                opacity: 0;
+            }
+            10% {
+                width: 80px;
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                width: 0px;
+                transform: translate(-500px, 500px) rotate(-45deg);
+                opacity: 0;
+            }
+        }
+
+        /* Container Principal */
+        .container {
+            width: 100%;
+            max-width: 1100px;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2;
+        }
+
+        h1.main-title {
+            font-size: 2.8rem;
+            text-align: center;
+            margin-bottom: 60px;
+            color: #fff;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.4), 0 0 30px rgba(147, 51, 234, 0.3);
+            letter-spacing: 3px;
+            font-weight: 700;
+        }
+
+        /* Painel de Planetas */
+        .planets-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 50px;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        /* Botões dos Planetas */
+        .planet-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            outline: none;
+            position: relative;
+            transition: transform 0.3s ease;
+            width: 160px;
+        }
+
+        .planet-sphere {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            margin-bottom: 18px;
+            position: relative;
+            transition: all 0.3s ease;
+            animation: float 4s infinite ease-in-out alternate;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-8px); }
+        }
+
+        /* --- DETALHAMENTO DOS PLANETAS REAIS --- */
+
+        /* O Sol Realista com Fusão Nuclear */
+        .p-sol .planet-sphere {
+            background: radial-gradient(circle at center, #ffffff 0%, #ffea79 25%, #ff7b00 55%, #cc0000 100%);
+            box-shadow: inset 0 0 20px #ffffff, 0 0 30px #ff9900, 0 0 60px #ff3300, 0 0 100px rgba(255, 51, 0, 0.5);
+            animation: sunPulse 3s infinite ease-in-out alternate, float 4s infinite ease-in-out alternate;
+        }
+        @keyframes sunPulse {
+            0% { box-shadow: inset 0 0 20px #ffffff, 0 0 30px #ff9900, 0 0 50px #ff3300, 0 0 80px rgba(255, 51, 0, 0.4); }
+            100% { box-shadow: inset 0 0 25px #ffffff, 0 0 40px #ffaa00, 0 0 75px #ff3300, 0 0 120px rgba(255, 51, 0, 0.7); }
+        }
+
+        /* Terra com oceanos e continentes simulados */
+        .p-terra .planet-sphere {
+            background: radial-gradient(circle at 30% 30%, transparent, rgba(0,0,0,0.9)), 
+                        radial-gradient(circle at 65% 65%, #15803d 25%, transparent 55%),
+                        radial-gradient(circle at 35% 30%, #22c55e 30%, #1d4ed8 70%);
+            box-shadow: inset -10px -10px 25px rgba(0,0,0,0.9), 0 0 25px rgba(59, 130, 246, 0.4);
+        }
+        /* Nuvens da Terra */
+        .p-terra .planet-sphere::before {
+            content: ''; position: absolute; width: 100%; height: 100%; border-radius: 50%;
+            background: radial-gradient(circle at 20% 40%, rgba(255,255,255,0.25) 0%, transparent 40%),
+                        radial-gradient(circle at 75% 30%, rgba(255,255,255,0.2) 0%, transparent 35%);
+            filter: blur(1px);
+        }
+
+        /* Marte de Ferro e atmosfera tênue */
+        .p-marte .planet-sphere {
+            background: radial-gradient(circle at 30% 30%, transparent, rgba(0,0,0,0.95)),
+                        radial-gradient(circle at 25% 25%, #fca5a5 10%, #b91c1c 70%, #450a0a 100%);
+            box-shadow: inset -10px -10px 25px rgba(0,0,0,0.9), 0 0 20px rgba(239, 68, 68, 0.3);
+        }
+
+        /* Saturno Realista com anéis de poeira */
+        .p-saturno .planet-sphere {
+            background: radial-gradient(circle at 30% 30%, transparent, rgba(0,0,0,0.9)),
+                        linear-gradient(to bottom, #744e1a 5%, #eab308 20%, #ca8a04 40%, #a16207 60%, #451a03 95%);
+            box-shadow: inset -10px -10px 25px rgba(0,0,0,0.9), 0 0 20px rgba(234, 179, 8, 0.2);
+        }
+        .p-saturno .planet-sphere::after {
+            content: ''; position: absolute; top: 50%; left: 50%; width: 170px; height: 22px;
+            border: 6px solid rgba(234, 179, 8, 0.4); border-radius: 50%;
+            transform: translate(-50%, -50%) rotate(-13deg);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+
+        /* Júpiter com suas faixas gasosas clássicas */
+        .p-jupiter .planet-sphere {
+            background: radial-gradient(circle at 30% 30%, transparent 10%, rgba(0,0,0,0.95) 90%), 
+                        linear-gradient(to bottom, #451a03 0%, #9a3412 15%, #fed7aa 25%, #ea580c 45%, #9a3412 65%, #fed7aa 75%, #451a03 100%);
+            box-shadow: inset -10px -10px 25px rgba(0,0,0,0.9), 0 0 20px rgba(249, 115, 22, 0.2);
+        }
+
+        /* Netuno de metano azul gelo profundo */
+        .p-netuno .planet-sphere {
+            background: radial-gradient(circle at 30% 30%, transparent, rgba(0,0,0,0.95)),
+                        linear-gradient(140deg, #6366f1 0%, #312e81 70%, #1e1b4b 100%);
+            box-shadow: inset -10px -10px 25px rgba(0,0,0,0.9), 0 0 25px rgba(99, 102, 241, 0.35);
+        }
+
+        /* Efeito Hover nos botões dos Planetas */
+        .planet-btn:hover .planet-sphere {
+            transform: scale(1.06);
+        }
+
+        .planet-name {
+            font-size: 1.05rem;
+            font-weight: 600;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.9);
+            letter-spacing: 0.5px;
+            color: #e2e8f0;
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        /* Cartões de Conteúdo (Glassmorphism) */
+        .section-content {
+            display: none;
+            width: 100%;
+            max-width: 650px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+            animation: scaleUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            text-align: center;
+        }
+
+        @keyframes scaleUp {
+            from { opacity: 0; transform: scale(0.96); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .section-title {
+            font-size: 2.1rem;
+            margin-bottom: 30px;
+            background: linear-gradient(45deg, #ffffff, var(--title-color, #ffffff));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
+            line-height: 1.4;
+        }
+
+        /* Botão Voltar */
+        .back-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #e2e8f0;
+            padding: 12px 35px;
+            font-size: 0.95rem;
+            border-radius: 50px;
+            cursor: pointer;
+            margin-top: 35px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .back-btn:hover {
+            background: #ffffff;
+            color: #020208;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Estilização União Espacial (Coração + Anel) */
+        .saturn-heart-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 40px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Tamanho baseado no planeta Saturno */
+        .saturn-heart {
+            width: 90px;
+            height: 90px;
+            background: #ef4444;
+            position: relative;
+            transform: rotate(-45deg);
+            box-shadow: 0 0 30px rgba(239, 68, 68, 0.6);
+            animation: heartPulse 1.2s infinite alternate ease-in-out;
+            z-index: 1;
+        }
+        .saturn-heart::before, .saturn-heart::after {
+            content: ''; width: 90px; height: 90px;
+            background: #ef4444; border-radius: 50%;
+            position: absolute;
+        }
+        .saturn-heart::before { top: -45px; left: 0; }
+        .saturn-heart::after { top: 0; left: 45px; }
+
+        /* O Anel ao redor do Coração */
+        .saturn-heart-container::after {
+            content: ''; position: absolute;
+            width: 180px; height: 26px;
+            border: 7px solid rgba(251, 191, 36, 0.8); border-radius: 50%;
+            transform: rotate(-15deg);
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
+            pointer-events: none;
+            z-index: 2; /* Fica por cima na frente, cruzando o coração */
+        }
+
+        @keyframes heartPulse {
+            0% { transform: scale(0.95) rotate(-45deg); }
+            100% { transform: scale(1.08) rotate(-45deg); box-shadow: 0 0 45px rgba(239, 68, 68, 0.9); }
+        }
+
+        /* Estilização das Outras Seções */
+        .poem-text {
+            font-style: italic; line-height: 1.8; font-size: 1.1rem; color: #e2e8f0;
+            max-height: 350px; overflow-y: auto; padding-right: 5px;
+        }
+
+        .carta-item {
+            background: rgba(255, 255, 255, 0.02); border-left: 3px solid #ef4444;
+            padding: 18px; margin-bottom: 15px; border-radius: 0 12px 12px 0;
+            text-align: left; font-size: 1.1rem; line-height: 1.5; color: #f1f5f9;
+        }
+
+        .fotos-frase {
+            font-size: 1.3rem; line-height: 1.7; color: #60a5fa; padding: 25px 10px; font-weight: 500;
+        }
+
+        .playlist-btn {
+            display: inline-block; background: linear-gradient(135deg, #a78bfa, #5b21b6);
+            color: white; text-decoration: none; padding: 16px 40px; font-size: 1.1rem;
+            font-weight: bold; border-radius: 50px; box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
+            transition: all 0.3s ease; margin-top: 15px;
+        }
+        .playlist-btn:hover { transform: scale(1.03); box-shadow: 0 0 30px rgba(139, 92, 246, 0.7); }
+
+        .coisas-container { max-height: 320px; overflow-y: auto; padding-right: 10px; text-align: left; }
+        .coisas-container::-webkit-scrollbar, .poem-text::-webkit-scrollbar { width: 5px; }
+        .coisas-container::-webkit-scrollbar-thumb, .poem-text::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 10px; }
+
+        .coisas-list { list-style: none; }
+        .coisas-list li { padding: 12px 10px; border-bottom: 1px solid rgba(255, 255, 255, 0.04); font-size: 1.1rem; color: #e2e8f0; display: flex; align-items: center; }
+        .coisas-list li::before { content: '✨'; margin-right: 12px; font-size: 0.8rem; }
+        .coisas-list li.final-destaque {
+            border-bottom: none; background: rgba(251, 191, 36, 0.1); border-radius: 12px;
+            margin-top: 15px; font-weight: 600; line-height: 1.6; color: #fde047; padding: 16px;
+        }
+        .coisas-list li.final-destaque::before { content: '👑'; font-size: 1.1rem; }
+
+        /* Responsividade */
+        @media (max-width: 600px) {
+            h1.main-title { font-size: 2rem; margin-bottom: 40px; }
+            .planets-grid { gap: 30px; }
+            .planet-sphere { width: 95px; height: 95px; }
+            .p-saturno .planet-sphere::after { width: 135px; }
+            .saturn-heart-container::after { width: 150px; }
+            .saturn-heart, .saturn-heart::before, .saturn-heart::after { width: 75px; height: 75px; }
+            .saturn-heart::before { top: -37px; } .saturn-heart::after { left: 37px; }
+            .section-content { padding: 30px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="space-bg" id="spaceBg"></div>
+
+    <div class="container">
+        
+        <div id="universe-hub" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+            <h1 class="main-title">O Universo da Ayla</h1>
+            
+            <div class="planets-grid">
+                <button class="planet-btn p-sol" onclick="navigate('sec-casar')">
+                    <div class="planet-sphere"></div>
+                    <div class="planet-name">casar?</div>
+                </button>
+
+                <button class="planet-btn p-terra" onclick="navigate('sec-fotos')">
+                    <div class="planet-sphere"></div>
+                    <div class="planet-name">fotos</div>
+                </button>
+
+                <button class="planet-btn p-marte" onclick="navigate('sec-cartas')">
+                    <div class="planet-sphere"></div>
+                    <div class="planet-name">cartas</div>
+                </button>
+
+                <button class="planet-btn p-saturno" onclick="navigate('sec-coisas')">
+                    <div class="planet-sphere"></div>
+                    <div class="planet-name">coisas que amo em voce</div>
+                </button>
+
+                <button class="planet-btn p-jupiter" onclick="navigate('sec-poema')">
+                    <div class="planet-sphere"></div>
+                    <div class="planet-name">poema</div>
+                </button>
+
+                <button class="planet-btn p-netuno" onclick="navigate('sec-playlist')">
+                    <div class="planet-sphere"></div>
+                    <div class="planet-name">playlist pensando em voce</div>
+                </button>
+            </div>
+        </div>
+
+        <section id="sec-casar" class="section-content" style="--title-color: #ffaa00;">
+            <h2 class="section-title">que tal assumir essa galaxia de amor que sinto por voce?, nunca é tarde para amar </h2>
+            
+            <div class="saturn-heart-container">
+                <div class="saturn-heart"></div>
+            </div>
+
+            <button class="back-btn" onclick="backToHub('sec-casar')">Voltar</button>
+        </section>
+
+        <section id="sec-fotos" class="section-content" style="--title-color: #60a5fa;">
+            <h2 class="section-title">Nossa Galeria</h2>
+            <p class="fotos-frase">
+                "nao temos fotos, nem historia para contar , entao que tal começar agora?"
+            </p>
+            <button class="back-btn" onclick="backToHub('sec-fotos')">Voltar</button>
+        </section>
+
+        <section id="sec-cartas" class="section-content" style="--title-color: #f87171;">
+            <h2 class="section-title">Linhas de Amor</h2>
+            <div class="carta-item">"voce é o meu remedio , entao por favor, me deixa com overdose"</div>
+            <div class="carta-item">"eu nao sei si voce gosta de mim, mas meu amor por você é maior que possa imaginar"</div>
+            <div class="carta-item">"eu sonho com voce, todas as noites ,sonhando com meu sonho"</div>
+            <div class="carta-item">"estar com você é sonhar de olho aberto"</div>
+            <button class="back-btn" onclick="backToHub('sec-cartas')">Voltar</button>
+        </section>
+
+        <section id="sec-coisas" class="section-content" style="--title-color: #fcd34d;">
+            <h2 class="section-title">Motivos do Meu Sorriso</h2>
+            <div class="coisas-container">
+                <ul class="coisas-list">
+                    <li>sua voz</li>
+                    <li>seu cheiro</li>
+                    <li>seu aparelho</li>
+                    <li>seu cabelo</li>
+                    <li>suas presilhas de cabelo maravilhosas</li>
+                    <li>seu olho castanho</li>
+                    <li>seu jeito doce</li>
+                    <li>o jeito que faz voce me sentir</li>
+                    <li>seu rosto</li>
+                    <li>seu corpo</li>
+                    <li>voce inteira no caso</li>
+                    <li class="final-destaque">esse seu jeito de princesa me faz querer ser o principe ideal para voce</li>
+                </ul>
+            </div>
+            <button class="back-btn" onclick="backToHub('sec-coisas')">Voltar</button>
+        </section>
+
+        <section id="sec-poema" class="section-content" style="--title-color: #f97316;">
+            <h2 class="section-title">Queria ter coragem</h2>
+            <div class="poem-text">
+                Queria ter coragem<br>
+                Para falar deste segredo<br>
+                Queria poder declarar ao mundo<br>
+                Este amor<br><br>
+                Não me falta vontade<br>
+                Não me falta desejo<br>
+                Você é minha vontade<br>
+                Meu maior desejo<br><br>
+                Queria poder gritar<br>
+                Esta loucura saudável<br>
+                Que é estar em teus braços<br>
+                Perdido pelos teus beijos<br>
+                Sentindo-me louco de desejo<br><br>
+                Queria recitar versos<br>
+                Cantar aos quatros ventos<br>
+                As palavras que brotam<br>
+                Você é a inspiração<br>
+                Minha motivação<br><br>
+                Queria falar dos sonhos<br>
+                Dizer os meus secretos desejos<br>
+                Que é largar tudo<br>
+                Para viver com você<br>
+                Este inconfesso desejo
+            </div>
+            <button class="back-btn" onclick="backToHub('sec-poema')">Voltar</button>
+        </section>
+
+        <section id="sec-playlist" class="section-content" style="--title-color: #a78bfa;">
+            <h2 class="section-title">Pensando em Você</h2>
+            <a href="https://www.youtube.com/playlist?list=PLc3RunsY5A39zSanj9F4H_JRbzZlkMfR3" target="_blank" class="playlist-btn">
+                Ouvir Playlist no YouTube 🎵
+            </a>
+            <button class="back-btn" onclick="backToHub('sec-playlist')">Voltar</button>
+        </section>
+
+    </div>
+
+    <script>
+        const spaceBg = document.getElementById('spaceBg');
+
+        // Cria estrelas fixas brilhantes
+        function initStars() {
+            for (let i = 0; i < 60; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                star.style.width = Math.random() * 2 + 1 + 'px';
+                star.style.height = star.style.width;
+                star.style.left = Math.random() * 100 + 'vw';
+                star.style.top = Math.random() * 100 + 'vh';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                spaceBg.appendChild(star);
+            }
+        }
+
+        // Sistema dinâmico de estrelas cadentes
+        function createShootingStar() {
+            const star = document.createElement('div');
+            star.classList.add('shooting-star');
+            
+            const startX = Math.random() * (window.innerWidth + 200) + 150;
+            const startY = Math.random() * (window.innerHeight / 2) - 80;
+            const duration = Math.random() * 1.5 + 1.5; 
+            const delay = Math.random() * 2; 
+            
+            star.style.setProperty('--start-x', `${startX}px`);
+            star.style.setProperty('--start-y', `${startY}px`);
+            star.style.setProperty('--duration', `${duration}s`);
+            star.style.animationDelay = `${delay}s`;
+            
+            spaceBg.appendChild(star);
+            
+            setTimeout(() => { star.remove(); }, (duration + delay) * 1000);
+        }
+
+        // Inicialização do Espaço
+        initStars();
+        for(let i = 0; i < 4; i++) createShootingStar();
+        setInterval(createShootingStar, 1500);
+
+        // Lógica de Navegação
+        function navigate(sectionId) {
+            document.getElementById('universe-hub').style.display = 'none';
+            document.getElementById(sectionId).style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function backToHub(sectionId) {
+            document.getElementById(sectionId).style.display = 'none';
+            document.getElementById('universe-hub').style.display = 'flex';
+        }
+    </script>
+</body>
+</html>
